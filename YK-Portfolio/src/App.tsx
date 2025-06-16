@@ -1,41 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { AnimatedBackground } from "./components/AnimatedBackground";
-import { Hero } from "./components/Hero";
-import { About } from "./components/About";
-import { Projects } from "./components/Projects";
-import { Skills } from "./components/Skills";
-import { Contact } from "./components/Contact";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { NavBar } from "./components/NavBar";
-import { LoadingScreen } from "./components/LoadingScreen";
+import React, { useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import MarqueeSection from './components/MarqueeSection';
 export function App() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-  }, []);
-  return (
-    <ThemeProvider>
-      {loading ? (
-        <LoadingScreen />
-      ) : (
-        <div className="relative w-full min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-          <AnimatedBackground />
-          <div className="relative z-10">
-            <NavBar />
-            <main>
-              <Hero />
-              <About />
-              <Skills />
-              <Projects />
-              <Contact />
-            </main>
-            <ThemeToggle />
-          </div>
-        </div>
-      )}
-    </ThemeProvider>
-  );
+  return <div className="bg-black text-white min-h-screen">
+      <Navbar />
+      <main className="overflow-hidden">
+        <Hero />
+        <MarqueeSection />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Footer />
+      </main>
+    </div>;
 }

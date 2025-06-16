@@ -1,207 +1,140 @@
-import React, { useEffect, useRef } from "react";
-import { CodeIcon, ServerIcon, DatabaseIcon, BrainIcon } from "lucide-react";
-export function Skills() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const skillRefs = useRef<(HTMLDivElement | null)[]>([]);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
+import React, { Children } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import AnimatedText from './AnimatedText';
+const Skills = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: false,
+    threshold: 0.1
+  });
+  const skillCategories = [{
+    title: 'Development',
+    skills: ['React', 'TypeScript', 'Node.js', 'Next.js', 'Express', 'GraphQL']
+  }, {
+    title: 'Design',
+    skills: ['Figma', 'Adobe XD', 'UI/UX', 'Responsive Design', 'Prototyping', 'Animation']
+  }, {
+    title: 'Tools',
+    skills: ['Git', 'Docker', 'AWS', 'Firebase', 'Jest', 'Webpack']
+  }];
+  const containerVariants = {
+    hidden: {
+      opacity: 0
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
       }
-    );
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
     }
-    skillRefs.current.forEach((ref) => {
-      if (ref) {
-        observer.observe(ref);
+  };
+  const itemVariants = {
+    hidden: {
+      y: 20,
+      opacity: 0
+    },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100
       }
-    });
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-      skillRefs.current.forEach((ref) => {
-        if (ref) {
-          observer.unobserve(ref);
-        }
-      });
-    };
-  }, []);
-  const skills = [
-    {
-      category: "Frontend",
-      icon: (
-        <CodeIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
-      ),
-      items: [
-        {
-          name: "React",
-          level: 90,
-        },
-        {
-          name: "JavaScript",
-          level: 85,
-        },
-        {
-          name: "HTML/CSS",
-          level: 95,
-        },
-        {
-          name: "TypeScript",
-          level: 80,
-        },
-      ],
-    },
-    {
-      category: "Backend",
-      icon: (
-        <ServerIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
-      ),
-      items: [
-        {
-          name: "Node.js",
-          level: 85,
-        },
-        {
-          name: "Express",
-          level: 80,
-        },
-        {
-          name: "Python",
-          level: 75,
-        },
-        {
-          name: "Java",
-          level: 70,
-        },
-      ],
-    },
-    {
-      category: "Database",
-      icon: (
-        <DatabaseIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
-      ),
-      items: [
-        {
-          name: "MongoDB",
-          level: 85,
-        },
-        {
-          name: "MySQL",
-          level: 80,
-        },
-        {
-          name: "PostgreSQL",
-          level: 75,
-        },
-        {
-          name: "Firebase",
-          level: 85,
-        },
-      ],
-    },
-    {
-      category: "Other",
-      icon: (
-        <BrainIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
-      ),
-      items: [
-        {
-          name: "Git",
-          level: 90,
-        },
-        {
-          name: "Docker",
-          level: 75,
-        },
-        {
-          name: "AWS",
-          level: 70,
-        },
-        {
-          name: "UI/UX Design",
-          level: 80,
-        },
-      ],
-    },
-  ];
-  return (
-    <section
-      id="skills"
-      className="py-20 bg-#111827 dark:bg-emerald-900/20 backdrop-blur-sm w-full"
-    >
-      <div className="container mx-auto px-6">
-        <div
-          ref={sectionRef}
-          className="text-center mb-16 opacity-0 translate-y-10 transition-all duration-1000"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-emerald-900 dark:text-emerald-100">
-            My{" "}
-            <span className="animate-gradient-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-600 to-green-500 dark:from-emerald-300 dark:via-emerald-400 dark:to-green-400">
-              Skills
-            </span>
-          </h2>
-          <p className="text-emerald-800 dark:text-emerald-200 max-w-2xl mx-auto">
-            A diverse set of skills developed throughout my journey as a
-            computer science student.
-          </p>
+    }
+  };
+  return <section className="py-24 px-6 md:px-12 bg-[#111]" id="skills" ref={ref}>
+      <div className="container mx-auto max-w-5xl">
+        <div className="text-center mb-16">
+          <motion.span className="text-[#4ecca3] font-medium" initial={{
+          opacity: 0
+        }} animate={inView ? {
+          opacity: 1
+        } : {
+          opacity: 0
+        }} transition={{
+          duration: 0.5
+        }}>
+            My Expertise
+          </motion.span>
+          <AnimatedText text="Skills & Technologies" className="text-3xl md:text-4xl font-bold mt-2 mb-6 justify-center" once={false} />
+          <motion.p className="text-gray-300 max-w-2xl mx-auto" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={inView ? {
+          opacity: 1,
+          y: 0
+        } : {
+          opacity: 0,
+          y: 20
+        }} transition={{
+          duration: 0.7,
+          delay: 0.2
+        }}>
+            I've worked with a variety of technologies and tools in the web
+            development world. Here's an overview of my technical skill set.
+          </motion.p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {skills.map((skillGroup, groupIndex) => (
-            <div
-              key={skillGroup.category}
-              ref={(el) => (skillRefs.current[groupIndex] = el)}
-              className="bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm rounded-xl shadow-lg p-6 opacity-0 translate-y-10 transition-all duration-1000 hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-400/10"
-              style={{
-                transitionDelay: `${groupIndex * 200}ms`,
-              }}
-            >
-              <div className="flex items-center mb-6">
-                {skillGroup.icon}
-                <h3 className="text-xl font-semibold ml-3 text-emerald-800 dark:text-emerald-200">
-                  {skillGroup.category}
-                </h3>
-              </div>
-              <div className="space-y-4">
-                {skillGroup.items.map((skill, index) => (
-                  <div key={skill.name} className="mb-4">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-emerald-700 dark:text-emerald-300">
-                        {skill.name}
-                      </span>
-                      <span className="text-emerald-600 dark:text-emerald-400">
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="w-full h-2.5 bg-emerald-100 dark:bg-emerald-900/50 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-green-500 dark:from-emerald-500 dark:to-green-400 transition-all duration-1000 ease-out"
-                        style={{
-                          width: "0%",
-                          animation: "growWidth 1.5s ease-out forwards",
-                          animationDelay: `${
-                            (groupIndex * 4 + index) * 200 + 500
-                          }ms`,
-                        }}
-                        data-width={`${skill.level}%`}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {skillCategories.map((category, index) => <motion.div key={index} className="bg-black p-6 rounded-lg border border-gray-800" initial={{
+          opacity: 0,
+          y: 30
+        }} animate={inView ? {
+          opacity: 1,
+          y: 0
+        } : {
+          opacity: 0,
+          y: 30
+        }} transition={{
+          duration: 0.5,
+          delay: index * 0.1
+        }} whileHover={{
+          y: -5,
+          boxShadow: '0 10px 30px -15px rgba(78, 204, 163, 0.2)'
+        }}>
+              <h3 className="text-xl font-bold mb-4 text-[#4ecca3]">
+                {category.title}
+              </h3>
+              <motion.ul className="space-y-3" variants={containerVariants} initial="hidden" animate={inView ? 'visible' : 'hidden'}>
+                {category.skills.map((skill, skillIndex) => <motion.li key={skillIndex} className="flex items-center" variants={itemVariants}>
+                    <span className="w-2 h-2 bg-[#4ecca3] rounded-full mr-3"></span>
+                    <span>{skill}</span>
+                  </motion.li>)}
+              </motion.ul>
+            </motion.div>)}
         </div>
+        <motion.div className="mt-20 bg-[#0c0c0c] rounded-xl p-8 relative overflow-hidden" initial={{
+        opacity: 0
+      }} animate={inView ? {
+        opacity: 1
+      } : {
+        opacity: 0
+      }} transition={{
+        duration: 0.7,
+        delay: 0.5
+      }}>
+          <motion.div className="absolute top-0 right-0 w-64 h-64 bg-[#4ecca3]/10 rounded-full -translate-y-1/2 translate-x-1/2" animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.2, 0.3]
+        }} transition={{
+          duration: 8,
+          repeat: Infinity
+        }} />
+          <div className="relative z-10">
+            <h3 className="text-2xl font-bold mb-4">Let's work together</h3>
+            <p className="text-gray-300 mb-6 max-w-2xl">
+              I'm always open to discussing new projects, creative ideas or
+              opportunities to be part of your vision.
+            </p>
+            <motion.button className="px-6 py-3 bg-[#4ecca3] text-black font-medium rounded-full hover:bg-[#3db892] transition-colors" whileHover={{
+            scale: 1.05
+          }} whileTap={{
+            scale: 0.95
+          }}>
+              Get in Touch
+            </motion.button>
+          </div>
+        </motion.div>
       </div>
-    </section>
-  );
-}
+    </section>;
+};
+export default Skills;
