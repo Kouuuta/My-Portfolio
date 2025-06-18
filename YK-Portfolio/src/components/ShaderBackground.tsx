@@ -4,7 +4,6 @@ export default function SmokeBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const timeRef = useRef(0);
-  const mouseRef = useRef({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,14 +41,6 @@ export default function SmokeBackground() {
       );
     };
 
-    // Mouse tracking (normalized)
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = {
-        x: e.clientX / width,
-        y: e.clientY / height,
-      };
-    };
-
     // Create flowing smoke effect
     const drawSmoke = () => {
       // Clear with black background
@@ -79,11 +70,6 @@ export default function SmokeBackground() {
             height * 0.5 +
             Math.sin(pathOffset + time * layerSpeed * 0.7) * height * 0.2;
 
-          // Mouse influence
-          const mouseInfluence = 50;
-          const dx = (mouseRef.current.x * width - pathX) * 0.001;
-          const dy = (mouseRef.current.y * height - pathY) * 0.001;
-
           ctx.beginPath();
 
           // Create flowing curve
@@ -98,17 +84,9 @@ export default function SmokeBackground() {
             );
 
             const x =
-              pathX +
-              (Math.cos(angle) * radius +
-                noiseValue * 20 +
-                dx * mouseInfluence) *
-                layerScale;
+              pathX + (Math.cos(angle) * radius + noiseValue * 20) * layerScale;
             const y =
-              pathY +
-              (Math.sin(angle) * radius +
-                noiseValue * 15 +
-                dy * mouseInfluence) *
-                layerScale;
+              pathY + (Math.sin(angle) * radius + noiseValue * 15) * layerScale;
 
             if (t === 0) {
               ctx.moveTo(x, y);
@@ -213,13 +191,12 @@ export default function SmokeBackground() {
 
     // Animation loop
     const animate = () => {
-      timeRef.current += 16; // ~60fps
+      timeRef.current += 4; // ~60fps
       drawSmoke();
       animationRef.current = requestAnimationFrame(animate);
     };
 
     // Event listeners
-    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", resizeCanvas);
 
     // Start animation
@@ -230,7 +207,6 @@ export default function SmokeBackground() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
@@ -243,8 +219,8 @@ export default function SmokeBackground() {
         top: 0,
         left: 0,
         zIndex: -1,
-        width: "100vw",
-        height: "100vh",
+        width: "150vw",
+        height: "150vh",
         background: "#000000",
         pointerEvents: "none",
       }}

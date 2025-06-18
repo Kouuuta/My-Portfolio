@@ -7,12 +7,12 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import MarqueeSection from "./components/MarqueeSection";
 import TopBar from "./components/TopBar";
-import SmokeBackground from "./components/SmokeBackground";
+import ShaderBackground from "./components/ShaderBackground";
 
 export function App() {
   return (
     <div className="text-white min-h-screen relative">
-      <SmokeBackground />
+      <ShaderBackground />
       <TopBar />
       <Navbar />
       <main className="overflow-hidden relative z-10">
