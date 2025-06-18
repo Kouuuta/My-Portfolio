@@ -15,7 +15,7 @@ const Hero = () => {
   }, [controls, inView]);
   return (
     <section className="min-h-screen flex items-center justify-center px-6 md:px-12 pt-20 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-1/2 h-screen bg-[#111] -z-10" />
+      <div className="absolute top-0 right-0 w-1/2 h-screen  -z-10" />
       {/* Animated circles */}
       <motion.div
         className="absolute w-96 h-96 rounded-full bg-[#4ecca3]/10 -z-10"
